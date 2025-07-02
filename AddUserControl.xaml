@@ -1,0 +1,157 @@
+﻿<UserControl x:Class="PanelNikeStore.AddUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="{DynamicResource WindowBackground}">
+
+    <Border Background="{DynamicResource ContentBackground}" Margin="20" CornerRadius="5" 
+            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- En-tête -->
+            <TextBlock Grid.Row="0" 
+                       Text="Ajouter un nouvel utilisateur" 
+                       FontSize="24" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,30"
+                       Foreground="{DynamicResource PrimaryText}"/>
+
+            <!-- Formulaire -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Identifiant -->
+                    <TextBlock Text="Identifiant" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,5" 
+                               Foreground="{DynamicResource PrimaryText}"/>
+                    <TextBox x:Name="txtIdentifiant" 
+                             Height="45" 
+                             Padding="10,0" 
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,20"
+                             FontSize="14"
+                             Background="{DynamicResource ControlBackground}"
+                             Foreground="{DynamicResource PrimaryText}"
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             BorderThickness="1"/>
+
+                    <!-- Email -->
+                    <TextBlock Text="Email" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,5" 
+                               Foreground="{DynamicResource PrimaryText}"/>
+                    <TextBox x:Name="txtEmail" 
+                             Height="45" 
+                             Padding="10,0" 
+                             VerticalContentAlignment="Center"
+                             Margin="0,0,0,20"
+                             FontSize="14"
+                             Background="{DynamicResource ControlBackground}"
+                             Foreground="{DynamicResource PrimaryText}"
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             BorderThickness="1"/>
+
+                    <!-- Mot de passe -->
+                    <TextBlock Text="Mot de passe" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,5" 
+                               Foreground="{DynamicResource PrimaryText}"/>
+                    <PasswordBox x:Name="txtPassword" 
+                                 Height="45" 
+                                 Padding="10,0" 
+                                 VerticalContentAlignment="Center"
+                                 Margin="0,0,0,5"
+                                 FontSize="14"
+                                 Background="{DynamicResource ControlBackground}"
+                                 Foreground="{DynamicResource PrimaryText}"
+                                 BorderBrush="{DynamicResource BorderBrush}"
+                                 BorderThickness="1"/>
+
+                    <!-- Message d'avertissement sur le mot de passe -->
+                    <TextBlock x:Name="txtPasswordWarning"
+                               Text="L'utilisateur devra changer son mot de passe dans les 5 jours suivant sa création."
+                               Foreground="{DynamicResource ErrorBrush}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,20"/>
+
+                    <!-- Rôle (avec RadioButtons au lieu de ComboBox) -->
+                    <TextBlock Text="Rôle" 
+                               FontWeight="SemiBold" 
+                               Margin="0,0,0,5" 
+                               Foreground="{DynamicResource PrimaryText}"/>
+
+                    <Border Background="{DynamicResource ControlBackground}" 
+                            BorderBrush="{DynamicResource BorderBrush}" 
+                            BorderThickness="1" 
+                            CornerRadius="3"
+                            Padding="10"
+                            Margin="0,0,0,20">
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton x:Name="rbClient" 
+                                        Content="Client" 
+                                        IsChecked="True" 
+                                        Margin="0,0,0,8" 
+                                        Foreground="{DynamicResource PrimaryText}"/>
+
+                            <RadioButton x:Name="rbAdmin" 
+                                        Content="Admin" 
+                                        Margin="0,0,0,8" 
+                                        Foreground="{DynamicResource PrimaryText}"/>
+
+                            <RadioButton x:Name="rbEmployee" 
+                                        Content="Employee" 
+                                        Foreground="{DynamicResource PrimaryText}"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Boutons d'action -->
+            <Grid Grid.Row="2" Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Message de statut -->
+                <TextBlock x:Name="txtStatus" 
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource SuccessBrush}"
+                       FontWeight="SemiBold"/>
+
+                <!-- Bouton Réinitialiser -->
+                <Button Grid.Column="1"
+                    Content="Réinitialiser" 
+                    Height="45" 
+                    Width="150"
+                    Margin="0,0,10,0"
+                    Background="{DynamicResource ControlBackground}"
+                    Foreground="{DynamicResource PrimaryText}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    Click="BtnReset_Click"/>
+
+                <!-- Bouton Ajouter -->
+                <Button Grid.Column="2" 
+                    Content="Ajouter l'utilisateur" 
+                    Height="45" 
+                    Width="200"
+                    Background="{DynamicResource AccentBrush}"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnAddUser_Click"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

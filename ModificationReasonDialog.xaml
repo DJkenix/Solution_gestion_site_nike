@@ -1,0 +1,59 @@
+﻿<Window x:Class="PanelNikeStore.ModificationReasonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Raison de la modification" Height="300" Width="450"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre et instructions -->
+        <TextBlock Grid.Row="0" 
+                   Text="Veuillez indiquer la raison de la modification de cette commande :" 
+                   TextWrapping="Wrap" FontSize="14" FontWeight="SemiBold"/>
+
+        <!-- ComboBox pour les raisons prédéfinies -->
+        <ComboBox x:Name="cmbReason" Grid.Row="2" SelectionChanged="CmbReason_SelectionChanged">
+            <ComboBoxItem Content="Erreur de commande"/>
+            <ComboBoxItem Content="Erreur du site"/>
+            <ComboBoxItem Content="Demande du client"/>
+            <ComboBoxItem Content="Produit indisponible"/>
+            <ComboBoxItem Content="Correction de prix"/>
+            <ComboBoxItem Content="Autre"/>
+        </ComboBox>
+
+        <!-- TextBox pour la raison personnalisée -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" x:Name="txtCustomReasonLabel"
+                       Text="Précisez la raison :" Visibility="Collapsed"/>
+            <TextBox Grid.Row="2" x:Name="txtCustomReason" Height="60" 
+                     TextWrapping="Wrap" AcceptsReturn="True" Visibility="Collapsed"/>
+        </Grid>
+
+        <!-- Boutons d'action -->
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnConfirm" Grid.Column="0" Content="Confirmer" 
+                    Margin="0,0,5,0" Padding="10,5" Click="BtnConfirm_Click"/>
+            <Button x:Name="btnCancel" Grid.Column="1" Content="Annuler" 
+                    Margin="5,0,0,0" Padding="10,5" Click="BtnCancel_Click"/>
+        </Grid>
+    </Grid>
+</Window>

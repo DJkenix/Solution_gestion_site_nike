@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="PanelNikeStore.InfoCardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="300">
+    <Border CornerRadius="10" Padding="15" Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="txtCardTitle" Grid.Row="0" Text="Titre de la carte" 
+                       FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10" Foreground="#333333"/>
+
+            <TextBlock x:Name="txtCardCount" Grid.Row="1" Text="0" 
+                       FontSize="36" FontWeight="Bold" Foreground="#007BFF"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+    </Border>
+</UserControl>

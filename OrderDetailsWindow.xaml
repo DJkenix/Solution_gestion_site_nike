@@ -1,0 +1,305 @@
+﻿<Window x:Class="PanelNikeStore.OrderDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PanelNikeStore"
+        mc:Ignorable="d"
+        Title="Détails de la commande" 
+        Height="600" Width="900"
+        WindowStartupLocation="CenterOwner"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <!-- Style pour les boutons modernes -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="15,10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1976D2"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#1565C0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour le bouton de fermeture -->
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#757575"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#616161"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#424242"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour les cards d'informations -->
+        <Style x:Key="InfoCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,20,0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="6" Color="#20000000" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style pour les étiquettes -->
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#757575"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <!-- Style pour les valeurs -->
+        <Style x:Key="ValueText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#212121"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- En-tête -->
+            <RowDefinition Height="Auto"/>
+            <!-- Informations commande -->
+            <RowDefinition Height="*"/>
+            <!-- Détails des produits -->
+            <RowDefinition Height="Auto"/>
+            <!-- Bouton de fermeture -->
+        </Grid.RowDefinitions>
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock x:Name="txtOrderTitle" 
+                          Text="Commande n°123456" 
+                          FontSize="24" 
+                          FontWeight="Bold" 
+                          Foreground="#212121"/>
+
+                <TextBlock x:Name="txtOrderDate" 
+                          Text="Commandé le 15/03/2025" 
+                          FontSize="16" 
+                          Margin="0,5,0,0" 
+                          Foreground="#757575"/>
+            </StackPanel>
+
+            <Border x:Name="bdOrderStatus" 
+                   Grid.Column="1" 
+                   Background="#4CAF50" 
+                   Padding="15,8">
+                <TextBlock x:Name="txtOrderStatus" 
+                          Text="Livré" 
+                          FontSize="16" 
+                          Foreground="White" 
+                          FontWeight="SemiBold"/>
+            </Border>
+        </Grid>
+
+        <!-- Informations commande -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Informations client -->
+            <Border Grid.Column="0" Style="{StaticResource InfoCard}">
+                <StackPanel Margin="20">
+                    <TextBlock Text="INFORMATIONS CLIENT" 
+                              FontSize="16" 
+                              FontWeight="Bold" 
+                              Margin="0,0,0,15" 
+                              Foreground="#424242"/>
+
+                    <TextBlock Text="Client" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtClientName" Text="John Doe" Style="{StaticResource ValueText}"/>
+
+                    <TextBlock Text="Email" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtClientEmail" Text="johndoe@example.com" Style="{StaticResource ValueText}"/>
+
+                    <TextBlock Text="Identifiant" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtClientId" Text="client123" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Informations paiement -->
+            <Border Grid.Column="1" Style="{StaticResource InfoCard}" Margin="0">
+                <StackPanel Margin="20">
+                    <TextBlock Text="INFORMATIONS PAIEMENT" 
+                              FontSize="16" 
+                              FontWeight="Bold" 
+                              Margin="0,0,0,15" 
+                              Foreground="#424242"/>
+
+                    <TextBlock Text="Montant total" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtTotalAmount" Text="239,98 €" Style="{StaticResource ValueText}"/>
+
+                    <TextBlock Text="Mode de paiement" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtPaymentMethod" Text="Carte bancaire" Style="{StaticResource ValueText}"/>
+
+                    <TextBlock Text="Transaction ID" Style="{StaticResource LabelText}"/>
+                    <TextBlock x:Name="txtTransactionId" Text="pi_3R2yEmG8NKYv2Bjh0Jct0XJk" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Détails des produits -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- En-tête tableau -->
+                <Grid Grid.Row="0" Background="#F5F5F5" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <!-- Produit -->
+                        <ColumnDefinition Width="100"/>
+                        <!-- Taille -->
+                        <ColumnDefinition Width="100"/>
+                        <!-- Quantité -->
+                        <ColumnDefinition Width="120"/>
+                        <!-- Prix unitaire -->
+                        <ColumnDefinition Width="120"/>
+                        <!-- Total -->
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Produit" FontWeight="SemiBold" Foreground="#424242" Margin="20,15"/>
+                    <TextBlock Grid.Column="1" Text="Taille" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                    <TextBlock Grid.Column="2" Text="Quantité" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                    <TextBlock Grid.Column="3" Text="Prix unitaire" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                    <TextBlock Grid.Column="4" Text="Total" FontWeight="SemiBold" Foreground="#424242" Margin="0,15,20,15"/>
+                </Grid>
+
+                <!-- Liste des produits -->
+                <ListView x:Name="OrderItemsList" 
+                         Grid.Row="1" 
+                         BorderThickness="0" 
+                         Background="Transparent" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="#EEEEEE"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#F5F5F5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="20,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <!-- Produit -->
+                                    <ColumnDefinition Width="100"/>
+                                    <!-- Taille -->
+                                    <ColumnDefinition Width="100"/>
+                                    <!-- Quantité -->
+                                    <ColumnDefinition Width="120"/>
+                                    <!-- Prix unitaire -->
+                                    <ColumnDefinition Width="120"/>
+                                    <!-- Total -->
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Produit -->
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding ProductName}" 
+                                              FontWeight="SemiBold" 
+                                              Foreground="#212121"/>
+
+                                    <TextBlock Text="{Binding VariantName}" 
+                                              FontSize="12" 
+                                              Margin="0,5,0,0" 
+                                              Foreground="#757575"/>
+                                </StackPanel>
+
+                                <!-- Taille -->
+                                <TextBlock Grid.Column="1" 
+                                          Text="{Binding Size}" 
+                                          VerticalAlignment="Center"/>
+
+                                <!-- Quantité -->
+                                <TextBlock Grid.Column="2" 
+                                          Text="{Binding Quantity}" 
+                                          VerticalAlignment="Center"/>
+
+                                <!-- Prix unitaire -->
+                                <TextBlock Grid.Column="3" 
+                                          Text="{Binding UnitPrice, StringFormat={}{0:0.00} €}" 
+                                          VerticalAlignment="Center"/>
+
+                                <!-- Total -->
+                                <TextBlock Grid.Column="4" 
+                                          Text="{Binding TotalPrice, StringFormat={}{0:0.00} €}" 
+                                          FontWeight="SemiBold" 
+                                          VerticalAlignment="Center"
+                                          Foreground="#212121"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+
+        <!-- Bouton de fermeture -->
+        <Button Grid.Row="3" 
+               Content="Fermer" 
+               Style="{StaticResource CloseButton}" 
+               HorizontalAlignment="Right" 
+               Margin="0,20,0,0" 
+               Click="BtnClose_Click"/>
+    </Grid>
+</Window>

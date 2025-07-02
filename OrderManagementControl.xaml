@@ -1,0 +1,429 @@
+﻿<UserControl x:Class="PanelNikeStore.OrderManagementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PanelNikeStore"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200">
+    <UserControl.Resources>
+        <!-- Style pour les boutons modernes -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Margin="0" Padding="15,8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1976D2"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#1565C0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour le bouton de recherche -->
+        <Style x:Key="SearchButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#424242"/>
+        </Style>
+
+        <!-- Style pour le bouton de suppression -->
+        <Style x:Key="DeleteButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#F44336"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E53935"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#D32F2F"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour les cards d'informations -->
+        <Style x:Key="InfoCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,20,0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="6" Color="#20000000" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <local:OrderStatusColorConverter x:Key="OrderStatusColorConverter"/>
+
+    </UserControl.Resources>
+
+    <Grid Background="#F5F5F5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Titre -->
+            <RowDefinition Height="Auto"/>
+            <!-- Barre de recherche -->
+            <RowDefinition Height="*"/>
+            <!-- Contenu dynamique -->
+        </Grid.RowDefinitions>
+
+        <!-- Titre de la section -->
+        <Border Grid.Row="0" Background="White" Margin="0,0,0,20">
+            <Grid Margin="25,20">
+                <TextBlock Text="GESTION DES COMMANDES" 
+                          FontSize="26" 
+                          FontWeight="Bold" 
+                          Foreground="#212121"/>
+            </Grid>
+        </Border>
+
+        <!-- Grande barre de recherche -->
+        <Border Grid.Row="1" Background="White" Margin="0,0,0,20">
+            <Grid Margin="25,30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                          Text="Rechercher un client" 
+                          FontSize="18" 
+                          FontWeight="SemiBold" 
+                          Margin="0,0,0,15" 
+                          Foreground="#424242"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" 
+                           Background="White" 
+                           BorderBrush="#BDBDBD" 
+                           BorderThickness="1">
+                        <TextBox x:Name="txtSearchClient" 
+                                FontSize="16" 
+                                Background="Transparent" 
+                                BorderThickness="0"
+                                Margin="15,12"
+                                VerticalContentAlignment="Center"
+                                TextChanged="TxtSearchClient_TextChanged" >
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Foreground" Value="#BDBDBD"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsFocused" Value="True">
+                                            <Setter Property="Foreground" Value="#212121"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Border>
+
+                    <Button x:Name="btnSearchClient" 
+                           Grid.Column="1" 
+                           Content="Rechercher" 
+                           Style="{StaticResource SearchButton}" 
+                           Margin="15,0,0,0"
+                           Padding="20,12"
+                           Click="BtnSearchClient_Click"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Contenu dynamique: tableau de bord client ou message -->
+        <Grid Grid.Row="2">
+            <!-- Message par défaut -->
+            <Grid x:Name="DefaultMessagePanel" Visibility="Visible">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <TextBlock Text="Recherchez un client pour afficher ses commandes" 
+                              FontSize="20" 
+                              Foreground="#757575" 
+                              TextAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Tableau de bord client -->
+            <Grid x:Name="ClientDashboardPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Informations client -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- KPIs client -->
+                    <RowDefinition Height="*"/>
+                    <!-- Liste des commandes -->
+                </Grid.RowDefinitions>
+
+                <!-- Informations du client -->
+                <Border Grid.Row="0" Background="White" Margin="0,0,0,20">
+                    <Grid Margin="25,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Icône utilisateur -->
+                        <Border Grid.Column="0" 
+                               Background="#ECEFF1" 
+                               Width="80" 
+                               Height="80" 
+                               Margin="0,0,20,0">
+                            <TextBlock x:Name="txtClientInitials" 
+                                      Text="JD" 
+                                      FontSize="30" 
+                                      FontWeight="Bold" 
+                                      VerticalAlignment="Center" 
+                                      HorizontalAlignment="Center" 
+                                      Foreground="#455A64"/>
+                        </Border>
+
+                        <!-- Informations client -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="txtClientName" 
+                                      Text="John Doe" 
+                                      FontSize="24" 
+                                      FontWeight="Bold" 
+                                      Foreground="#212121"/>
+
+                            <TextBlock x:Name="txtClientEmail" 
+                                      Text="johndoe@example.com" 
+                                      FontSize="16" 
+                                      Margin="0,5,0,0" 
+                                      Foreground="#757575"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                                <Border Background="#1E88E5" Padding="8,4">
+                                    <TextBlock x:Name="txtClientRole" 
+                                              Text="Client" 
+                                              FontSize="14" 
+                                              Foreground="White"/>
+                                </Border>
+
+                                <TextBlock x:Name="txtClientSince" 
+                                          Text="Client depuis le 01/01/2025" 
+                                          FontSize="14" 
+                                          Margin="15,0,0,0" 
+                                          VerticalAlignment="Center" 
+                                          Foreground="#757575"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- KPIs client -->
+                <Grid Grid.Row="1" Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Nombre total de commandes -->
+                    <Border Grid.Column="0" Style="{StaticResource InfoCard}">
+                        <StackPanel Margin="20">
+                            <TextBlock Text="Commandes totales" 
+                                      FontSize="16" 
+                                      Foreground="#757575"/>
+
+                            <TextBlock x:Name="txtTotalOrders" 
+                                      Text="12" 
+                                      FontSize="32" 
+                                      FontWeight="Bold" 
+                                      Margin="0,10,0,0" 
+                                      Foreground="#212121"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Montant total dépensé -->
+                    <Border Grid.Column="1" Style="{StaticResource InfoCard}">
+                        <StackPanel Margin="20">
+                            <TextBlock Text="Montant total dépensé" 
+                                      FontSize="16" 
+                                      Foreground="#757575"/>
+
+                            <TextBlock x:Name="txtTotalSpent" 
+                                      Text="1 259,94 €" 
+                                      FontSize="32" 
+                                      FontWeight="Bold" 
+                                      Margin="0,10,0,0" 
+                                      Foreground="#212121"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Dernière commande -->
+                    <Border Grid.Column="2" Style="{StaticResource InfoCard}" Margin="0">
+                        <StackPanel Margin="20">
+                            <TextBlock Text="Dernière commande" 
+                                      FontSize="16" 
+                                      Foreground="#757575"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock x:Name="txtLastOrderDate" 
+                                          Text="15/03/2025" 
+                                          FontSize="18" 
+                                          FontWeight="SemiBold" 
+                                          Foreground="#212121"/>
+
+                                <Border x:Name="bdLastOrderStatus" 
+                                       Background="#4CAF50" 
+                                       Margin="15,0,0,0" 
+                                       Padding="8,2">
+                                    <TextBlock x:Name="txtLastOrderStatus" 
+                                              Text="Livré" 
+                                              FontSize="14" 
+                                              Foreground="White"/>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock x:Name="txtLastOrderAmount" 
+                                      Text="239,98 €" 
+                                      FontSize="18" 
+                                      FontWeight="Bold" 
+                                      Margin="0,10,0,0" 
+                                      Foreground="#212121"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Liste des commandes -->
+                <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- En-tête tableau -->
+                        <Grid Grid.Row="0" Background="#F5F5F5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="Auto" MinWidth="100"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="250"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="N° Commande" FontWeight="SemiBold" Foreground="#424242" Margin="15,15,0,15"/>
+                            <TextBlock Grid.Column="1" Text="Date" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                            <TextBlock Grid.Column="2" Text="Montant" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                            <TextBlock Grid.Column="3" Text="Statut" FontWeight="SemiBold" Foreground="#424242" Margin="0,15"/>
+                            <TextBlock Grid.Column="4" Text="Actions" FontWeight="SemiBold" Foreground="#424242" Margin="0,15,15,15"/>
+                        </Grid>
+
+                        <!-- Liste des commandes -->
+                        <ListView x:Name="OrdersList" 
+                 Grid.Row="1" 
+                 BorderThickness="0" 
+                 Background="Transparent" 
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#EEEEEE"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="120"/>
+                                            <ColumnDefinition Width="Auto" MinWidth="100"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="180"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- N° Commande -->
+                                        <TextBlock Grid.Column="0" 
+                                  Text="{Binding Id}" 
+                                  VerticalAlignment="Center"
+                                  Margin="15,10"/>
+
+                                        <!-- Date -->
+                                        <TextBlock Grid.Column="1" 
+                                  Text="{Binding OrderDate}" 
+                                  VerticalAlignment="Center"
+                                  Margin="0,10"/>
+
+                                        <!-- Montant -->
+                                        <TextBlock Grid.Column="2" 
+                                  Text="{Binding Amount, StringFormat='{}{0:N2} €'}" 
+                                  VerticalAlignment="Center"
+                                  Margin="0,10"/>
+
+                                        <!-- Statut -->
+                                        <Border Grid.Column="3" 
+                               Background="{Binding Status, Converter={StaticResource OrderStatusColorConverter}}"
+                               CornerRadius="3"
+                               Padding="8,3" 
+                               Margin="0,10"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Status}" 
+                                      Foreground="White" 
+                                      FontSize="12"/>
+                                        </Border>
+
+                                        <!-- Actions -->
+                                        <!-- Actions -->
+                                        <!-- Actions -->
+                                        <StackPanel Grid.Column="4" 
+            Orientation="Horizontal" 
+            VerticalAlignment="Center"
+            Margin="0,10">
+                                            <Button Content="Détails" 
+            Tag="{Binding Id}" 
+            Click="BtnOrderDetails_Click"
+            Background="#2196F3" 
+            Foreground="White"
+            Margin="0,0,5,0"
+            Padding="12,3" 
+            BorderThickness="0"/>
+                                            <Button Content="Status" 
+            Tag="{Binding Id}" 
+            Click="BtnChangeStatus_Click"
+            Background="#FF9800" 
+            Foreground="White"
+            Margin="5,0"
+            Padding="12,3" 
+            BorderThickness="0"/>
+                                            <Button Tag="{Binding Id}" 
+            Click="BtnDeleteOrder_Click"
+            Background="#F44336" 
+            Foreground="White"
+            Margin="5,0,0,0"
+            Padding="10,3" 
+            BorderThickness="0">
+                                                <TextBlock Text="🗑️" FontSize="14"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

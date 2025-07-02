@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="PanelNikeStore.UserTableControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="{DynamicResource WindowBackground}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barre de recherche et titre -->
+        <Grid Grid.Row="0" Margin="20,20,20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" 
+                       Text="Gestion des utilisateurs" 
+                       FontSize="24" 
+                       FontWeight="SemiBold" 
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource PrimaryText}"/>
+
+            <Border Grid.Column="1" 
+                    Margin="20,0,10,0" 
+                    BorderBrush="{DynamicResource BorderBrush}" 
+                    BorderThickness="1" 
+                    CornerRadius="4"
+                    Background="{DynamicResource ControlBackground}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                             Text="🔍" 
+                             FontSize="16" 
+                             Margin="10,0,5,0" 
+                             VerticalAlignment="Center" 
+                             Foreground="{DynamicResource SecondaryText}"/>
+
+                    <TextBox x:Name="txtSearch" 
+                             Grid.Column="1"
+                             BorderThickness="0" 
+                             Background="Transparent"
+                             Padding="5" 
+                             Margin="0,0,5,0" 
+                             Height="40"
+                             VerticalContentAlignment="Center"
+                             FontSize="14"
+                             Foreground="{DynamicResource PrimaryText}"
+                             TextChanged="txtSearch_TextChanged" 
+                             />
+                </Grid>
+            </Border>
+
+            <Button x:Name="btnSearch" 
+                    Grid.Column="2" 
+                    Content="Rechercher" 
+                    Height="40" 
+                    Padding="15,0" 
+                    Background="{DynamicResource AccentBrush}" 
+                    Foreground="White" 
+                    BorderThickness="0"
+                    Click="btnSearch_Click"/>
+        </Grid>
+
+        <!-- Tableau des utilisateurs -->
+        <DataGrid x:Name="ClientTable" 
+                  Grid.Row="1"
+                  Margin="20,10,20,20"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  GridLinesVisibility="Horizontal"
+                  BorderThickness="1"
+                  BorderBrush="{DynamicResource BorderBrush}"
+                  Background="{DynamicResource ContentBackground}"
+                  Foreground="{DynamicResource PrimaryText}"
+                  RowBackground="{DynamicResource ContentBackground}"
+                  AlternatingRowBackground="{DynamicResource ControlBackground}"
+                  RowHeight="50"
+                  HeadersVisibility="Column"
+                  VerticalScrollBarVisibility="Auto">
+
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                    <Setter Property="Padding" Value="10,15"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Identifiant" Binding="{Binding identifiant}" Width="*"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding email}" Width="2*"/>
+                <DataGridTemplateColumn Header="Détails" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Voir détails" 
+                                    Margin="5"
+                                    Tag="{Binding identifiant}"
+                                    Click="ShowUserDetails_Click"
+                                    Padding="10,5"
+                                    Background="{DynamicResource InfoBrush}"
+                                    Foreground="White"
+                                    BorderThickness="0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="Modifier" 
+                                        Margin="5"
+                                        Tag="{Binding identifiant}"
+                                        Click="ModifyUser_Click"
+                                        Padding="10,5"
+                                        Background="{DynamicResource SuccessBrush}"
+                                        Foreground="White"
+                                        BorderThickness="0"/>
+
+                                <Button Content="Supprimer" 
+                                        Margin="5"
+                                        Tag="{Binding identifiant}"
+                                        Click="DeleteUser_Click"
+                                        Padding="10,5"
+                                        Background="{DynamicResource ErrorBrush}"
+                                        Foreground="White"
+                                        BorderThickness="0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

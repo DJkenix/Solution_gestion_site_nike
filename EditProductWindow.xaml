@@ -1,0 +1,311 @@
+﻿<Window x:Class="PanelNikeStore.EditProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PanelNikeStore"
+        mc:Ignorable="d"
+        Title="Modifier le produit" Height="770" Width="950" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="{DynamicResource WindowBackground}">
+
+    <Window.Resources>
+        <!-- Convertisseur pour les couleurs de stock -->
+        <local:StockColorConverter x:Key="StockColorConverter"/>
+        <!-- Convertisseur pour la visibilité -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+        <!-- Style pour les boutons standards -->
+        <Style x:Key="StandardButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour le bouton principal -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource StandardButton}">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour bouton d'action -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuHover}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour les étiquettes -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+        </Style>
+
+        <!-- Style pour les zones de texte -->
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ScrollViewer x:Name="PART_ContentHost" Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style pour les ComboBox -->
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,5"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource ContentBackground}" Margin="10" CornerRadius="8" Padding="20" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Titre et information du produit -->
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Modifier le produit" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" Foreground="{DynamicResource AccentBrush}"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- ID du produit (non modifiable) -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="txtId" Grid.Row="0" Grid.Column="1" IsReadOnly="True" Style="{StaticResource TextBoxStyle}" Background="{DynamicResource ControlBackground}"/>
+
+                    <!-- Nom du produit -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Nom:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="txtName" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxStyle}"/>
+
+                    <!-- Prix du produit -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Prix (€):" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="txtPrice" Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxStyle}"/>
+
+                    <!-- Type de produit -->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Type:" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox x:Name="cmbType" Grid.Row="3" Grid.Column="1" Style="{StaticResource ComboBoxStyle}">
+                        <ComboBoxItem Content="Football" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Running" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Basketball" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Lifestyle" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Jordan" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Marche à pied" Foreground="{DynamicResource PrimaryText}"/>
+                    </ComboBox>
+
+                    <!-- Genre -->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Genre:" Style="{StaticResource LabelStyle}"/>
+                    <ComboBox x:Name="cmbGenre" Grid.Row="4" Grid.Column="1" Style="{StaticResource ComboBoxStyle}">
+                        <ComboBoxItem Content="Homme" Foreground="{DynamicResource PrimaryText}"/>
+                        <ComboBoxItem Content="Femme" Foreground="{DynamicResource PrimaryText}"/>
+                    </ComboBox>
+
+                    <!-- Stock total (non modifiable ici) -->
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Stock total:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="txtStock" Grid.Row="5" Grid.Column="1" IsReadOnly="True" 
+                             Style="{StaticResource TextBoxStyle}" Background="{DynamicResource ControlBackground}"
+                             Foreground="{Binding Text, ElementName=txtStock, Converter={StaticResource StockColorConverter}}"/>
+
+                    <!-- Description du produit -->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Description:" Style="{StaticResource LabelStyle}" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                    <TextBox x:Name="txtDescription" Grid.Row="6" Grid.Column="1" Height="120" 
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" 
+                             Style="{StaticResource TextBoxStyle}" Margin="0,8,0,0"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- Images, aperçu et gestion -->
+            <Border Grid.Column="1" Grid.RowSpan="2" Margin="20,0,0,0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="5" Padding="15" Background="{DynamicResource ContentBackground}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Titre de la section images -->
+                    <TextBlock Grid.Row="0" Text="Image du produit" FontSize="18" FontWeight="Bold" Margin="0,0,0,15" Foreground="{DynamicResource AccentBrush}"/>
+
+                    <!-- Aperçu de l'image -->
+                    <Border Grid.Row="1" Width="250" Height="250" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,0,15" CornerRadius="4" Background="{DynamicResource ControlBackground}">
+                        <Grid>
+                            <Image x:Name="imgPreview" Width="240" Height="240" Stretch="Uniform"/>
+                            <!-- Étoile pour indiquer l'image principale -->
+                            <TextBlock x:Name="txtMainImageIndicator" Text="★" FontSize="20" Foreground="Gold" 
+                                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5"
+                                      Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Espace pour séparer l'aperçu de la liste -->
+                    <Rectangle Grid.Row="2" Height="10"/>
+
+                    <!-- Liste des images avec actions visibles -->
+                    <Border Grid.Row="3" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" CornerRadius="4" Background="{DynamicResource ControlBackground}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- En-tête de la liste -->
+                            <Grid Grid.Row="0" Background="{DynamicResource ControlBackground}">
+                                <TextBlock Text="Images disponibles" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryText}" Margin="5"/>
+                            </Grid>
+
+                            <!-- Liste des images -->
+                            <ListView x:Name="lstImages" Grid.Row="1" ItemsSource="{Binding ProductImages}" 
+                                      Height="190" BorderThickness="0" Background="Transparent">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- URL de l'image (première ligne) et visualisation sur clic -->
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Indicateur d'image principale -->
+                                                <TextBlock Grid.Column="0" Text="★" Foreground="Gold" 
+                                                           Visibility="{Binding IsMain, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                                           Margin="0,0,5,0" FontSize="14"/>
+
+                                                <!-- URL de l'image cliquable -->
+                                                <TextBlock Grid.Column="1" Text="{Binding ImageUrl}" TextTrimming="CharacterEllipsis"
+                                                         VerticalAlignment="Center" ToolTip="{Binding ImageUrl}" Foreground="{DynamicResource PrimaryText}"
+                                                         Tag="{Binding}" MouseDown="TextBlock_MouseDown" Cursor="Hand"/>
+                                            </Grid>
+
+                                            <!-- Boutons d'action (deuxième ligne) -->
+                                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,2,0,2">
+                                                <Button Content="★" ToolTip="Définir comme principale" Tag="{Binding}" Click="BtnSetAsMain_Click" 
+                                                        Margin="2,0" Width="24" Height="24" Padding="0" Foreground="{DynamicResource SecondaryText}"/>
+                                                <Button Content="✏️" ToolTip="Modifier" Tag="{Binding}" Click="BtnEditImage_Click" 
+                                                        Margin="2,0" Width="24" Height="24" Padding="0"/>
+                                                <Button Content="❌" ToolTip="Supprimer" Tag="{Binding}" Click="BtnDeleteImage_Click" 
+                                                        Margin="2,0" Width="24" Height="24" Padding="0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Border>
+
+                    <!-- Boutons pour ajouter/supprimer des images -->
+                    <StackPanel Grid.Row="4" Margin="0,15,0,0">
+                        <Button Content="+ Ajouter une nouvelle image" Click="BtnAddNewImage_Click" Padding="10,7" 
+                                Style="{StaticResource StandardButton}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Boutons de confirmation/annulation -->
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button x:Name="BtnCancel" Content="Annuler" Width="120" Height="35" 
+                        Click="BtnCancel_Click" Margin="0,0,15,0" Style="{StaticResource StandardButton}"/>
+                <Button x:Name="BtnSave" Content="Enregistrer" Width="120" Height="35" 
+                        Click="BtnSave_Click" Style="{StaticResource PrimaryButton}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

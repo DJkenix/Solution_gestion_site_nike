@@ -1,0 +1,92 @@
+﻿<Window x:Class="PanelNikeStore.ChangeOrderStatusDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Modifier le statut de la commande" 
+        Height="450" Width="450"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <TextBlock Grid.Row="0" 
+                   Text="Modifier le statut de la commande" 
+                   FontSize="18" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20"/>
+
+        <!-- Informations commande -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,20">
+            <TextBlock Text="Commande n°:" 
+                      FontWeight="SemiBold" 
+                      Margin="0,0,0,5"/>
+            <TextBlock x:Name="txtOrderId" 
+                      Text="123456" 
+                      FontSize="16" 
+                      Margin="0,0,0,15"/>
+
+            <TextBlock Text="Statut actuel:" 
+                      FontWeight="SemiBold" 
+                      Margin="0,0,0,5"/>
+            <TextBlock x:Name="txtCurrentStatus" 
+                      Text="En préparation" 
+                      FontSize="16"/>
+        </StackPanel>
+
+        <!-- Options de statut -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,20">
+            <TextBlock Text="Sélectionnez le nouveau statut:" 
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,15"/>
+
+            <RadioButton x:Name="rbWaiting" 
+                        Content="En attente" 
+                        Tag="en attente"
+                        Margin="0,0,0,15" 
+                        FontSize="14"/>
+
+            <RadioButton x:Name="rbPreparation" 
+                        Content="En préparation" 
+                        Tag="en préparation"
+                        Margin="0,0,0,15" 
+                        FontSize="14"/>
+
+            <RadioButton x:Name="rbShipped" 
+                        Content="Envoyé" 
+                        Tag="envoyé"
+                        Margin="0,0,0,15" 
+                        FontSize="14"/>
+
+            <RadioButton x:Name="rbDelivered" 
+                        Content="Livré" 
+                        Tag="livré"
+                        Margin="0,0,0,15" 
+                        FontSize="14"/>
+        </StackPanel>
+
+        <!-- Boutons d'action -->
+        <StackPanel Grid.Row="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button x:Name="btnCancel" 
+                   Content="Annuler" 
+                   Width="100" 
+                   Height="30"
+                   Margin="0,0,10,0"
+                   Click="BtnCancel_Click"/>
+
+            <Button x:Name="btnConfirm" 
+                   Content="Confirmer" 
+                   Width="100" 
+                   Height="30"
+                   Background="#1E88E5"
+                   Foreground="White"
+                   Click="BtnConfirm_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

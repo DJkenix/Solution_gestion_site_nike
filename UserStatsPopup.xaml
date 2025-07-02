@@ -1,0 +1,154 @@
+﻿<Window x:Class="PanelNikeStore.UserStatsPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PanelNikeStore"
+        mc:Ignorable="d"
+        Title="Statistiques utilisateurs" Height="480" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Répartition des utilisateurs" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+            <Button x:Name="CloseButton" Grid.Column="1" Content="✕" Click="CloseButton_Click" VerticalAlignment="Top" HorizontalAlignment="Right"
+                    Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#757575" FontSize="16"/>
+        </Grid>
+
+        <!-- Contenu principal -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Graphique simple -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Par rôle" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <!-- Graphique à barres simple -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Barre des admins -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <TextBlock x:Name="txtAdminCount" Text="5" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                        <Border x:Name="AdminBar" Background="#F44336" Width="50" Height="70" CornerRadius="3,3,0,0" Margin="0,5,0,5"/>
+                        <TextBlock Text="Admins" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Barre des employés -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <TextBlock x:Name="txtEmployeeCount" Text="12" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                        <Border x:Name="EmployeeBar" Background="#2196F3" Width="50" Height="120" CornerRadius="3,3,0,0" Margin="0,5,0,5"/>
+                        <TextBlock Text="Employés" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Barre des clients -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <TextBlock x:Name="txtClientCount" Text="83" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                        <Border x:Name="ClientBar" Background="#4CAF50" Width="50" Height="200" CornerRadius="3,3,0,0" Margin="0,5,0,5"/>
+                        <TextBlock Text="Clients" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- Statistiques détaillées -->
+            <Border Grid.Column="1" Background="#F5F5F5" CornerRadius="5" Margin="10,0,0,0">
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Statistiques détaillées" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                    <StackPanel Grid.Row="1">
+                        <!-- Section Admin -->
+                        <Border Background="#FFEBEE" CornerRadius="5" Padding="10" Margin="0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Administrateurs" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="txtAdminPercent" Text="5%" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Section Employés -->
+                        <Border Background="#E3F2FD" CornerRadius="5" Padding="10" Margin="0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Employés" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="txtEmployeePercent" Text="12%" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Section Clients -->
+                        <Border Background="#E8F5E9" CornerRadius="5" Padding="10" Margin="0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Clients" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="txtClientPercent" Text="83%" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Total utilisateurs -->
+                        <Border Background="#E0E0E0" CornerRadius="5" Padding="10" Margin="0,15,0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Total utilisateurs" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="txtTotalUsers" Text="100" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Utilisateurs récents -->
+                        <Border Background="#FFF8E1" CornerRadius="5" Padding="10" Margin="0,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Nouveaux (derniers 30 jours)" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" x:Name="txtNewUsers" Text="15" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Pied de page avec bouton de fermeture -->
+        <Button Grid.Row="2" Content="Fermer" Width="100" Height="30" Margin="0,20,0,0" Click="CloseButton_Click" 
+                HorizontalAlignment="Center" Background="#E0E0E0" BorderThickness="0"/>
+    </Grid>
+</Window>

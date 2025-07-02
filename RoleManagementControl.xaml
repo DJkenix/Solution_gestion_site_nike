@@ -1,0 +1,159 @@
+﻿<UserControl x:Class="PanelNikeStore.RoleManagementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="900"
+             Background="{DynamicResource WindowBackground}"
+             Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <!-- Style pour les DataGrids - adapté au mode sombre -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="{DynamicResource ContentBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="{DynamicResource ContentBackground}"/>
+            <Setter Property="AlternatingRowBackground" Value="{DynamicResource ControlBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="CanUserResizeRows" Value="False"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="ColumnHeaderHeight" Value="32"/>
+            <Setter Property="RowHeight" Value="30"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+        </Style>
+
+        <!-- Style pour les en-têtes de colonnes -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{DynamicResource ContentBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource SecondaryText}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Style pour les cellules -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre et description -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="Gestion des Rôles" FontWeight="Bold" FontSize="22" Foreground="{DynamicResource PrimaryText}"/>
+            <TextBlock Text="Attribuez des rôles aux utilisateurs selon leurs fonctions dans l'application." 
+                       TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{DynamicResource SecondaryText}" FontSize="13"/>
+        </StackPanel>
+
+        <!-- Section de recherche et tableau des utilisateurs -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Barre de recherche -->
+            <Border Grid.Row="0" Background="{DynamicResource ControlBackground}" 
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" 
+                    Width="250" HorizontalAlignment="Left" Margin="0,0,0,15" Height="32">
+                <TextBox x:Name="txtSearch" BorderThickness="0" Margin="5,0" VerticalContentAlignment="Center"
+                       TextChanged="TxtSearch_TextChanged" FontSize="12" Height="22"
+                       Background="Transparent"
+                       Foreground="{DynamicResource PrimaryText}"/>
+            </Border>
+
+            <!-- DataGrid pour afficher les utilisateurs -->
+            <DataGrid x:Name="UsersDataGrid" Grid.Row="1" Height="250" Margin="0,0,0,20" 
+                      SelectionUnit="FullRow" SelectionMode="Single" SelectionChanged="UsersDataGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Identifiant" Binding="{Binding identifiant}" Width="150"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding email}" Width="250"/>
+                    <DataGridTextColumn Header="Rôle" Binding="{Binding role}" Width="100"/>
+                    <DataGridTemplateColumn Header="Actions" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="Modifier" 
+                                           Foreground="{DynamicResource AccentBrush}" 
+                                           FontSize="12"
+                                           TextDecorations="Underline"
+                                           Cursor="Hand"
+                                           MouseLeftButtonDown="BtnModifyRole_Click"
+                                           Tag="{Binding identifiant}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Section des logs de changement de rôle -->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Historique des modifications" 
+                       FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10" 
+                       Foreground="{DynamicResource PrimaryText}"/>
+
+            <!-- Barre de recherche pour les logs -->
+            <Border Grid.Row="1" Background="{DynamicResource ControlBackground}" 
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="4" 
+                    Width="250" HorizontalAlignment="Left" Margin="0,0,0,15" Height="32">
+                <TextBox x:Name="txtLogSearch" BorderThickness="0" Margin="5,0" VerticalContentAlignment="Center"
+                         TextChanged="TxtLogSearch_TextChanged" FontSize="12" Height="22"
+                         Background="Transparent"
+                         Foreground="{DynamicResource PrimaryText}"/>
+            </Border>
+
+            <!-- DataGrid pour afficher l'historique -->
+            <DataGrid x:Name="LogsDataGrid" Grid.Row="2" Height="180" 
+                      HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Date" Binding="{Binding change_date}" Width="150"/>
+                    <DataGridTextColumn Header="Administrateur" Binding="{Binding admin_username}" Width="120"/>
+                    <DataGridTextColumn Header="Utilisateur" Binding="{Binding user_modified}" Width="120"/>
+                    <DataGridTextColumn Header="Nouveau rôle" Binding="{Binding new_role}" Width="100"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

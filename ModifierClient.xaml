@@ -1,0 +1,78 @@
+﻿<Window x:Class="PanelNikeStore.ModifierClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Modifier un utilisateur" 
+        Height="350" Width="550"
+        MinHeight="350" MinWidth="550"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5"
+        ResizeMode="NoResize">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- En-tête -->
+        <TextBlock Grid.Row="0" 
+                   Text="Modifier un utilisateur" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20"
+                   Foreground="#222222"/>
+
+        <!-- Formulaire -->
+        <StackPanel Grid.Row="1" Margin="0,10">
+            <TextBlock Text="Identifiant" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#444"/>
+            <TextBox x:Name="modifierid" 
+                     Height="40" 
+                     Padding="10,0" 
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Background="#EEEEEE"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+
+            <TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#444"/>
+            <TextBox x:Name="modifieremail" 
+                     Height="40" 
+                     Padding="10,0" 
+                     VerticalContentAlignment="Center"
+                     Background="White"
+                     BorderBrush="#DDDDDD"
+                     Margin="0,0,0,15"
+                     FontSize="14"/>
+        </StackPanel>
+
+        <!-- Boutons -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" 
+                    Content="Annuler" 
+                    Height="45" 
+                    Width="150"
+                    Margin="0,0,10,0"
+                    Background="White"
+                    Foreground="#444444"
+                    BorderBrush="#DDDDDD"
+                    Click="AnnulerModification"/>
+
+            <Button Grid.Column="1" 
+                    Content="Enregistrer" 
+                    Height="45" 
+                    Width="150"
+                    Margin="10,0,0,0"
+                    Background="#007BFF"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="EnregistrerModifications"/>
+        </Grid>
+    </Grid>
+</Window>

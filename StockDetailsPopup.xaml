@@ -1,0 +1,254 @@
+﻿<Window x:Class="PanelNikeStore.StockDetailsPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PanelNikeStore"
+        mc:Ignorable="d"
+        Title="Détails du Stock" 
+        Height="650" Width="900"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <!-- Convertisseur pour les couleurs de stock -->
+        <local:StockColorConverter x:Key="StockColorConverter"/>
+
+        <!-- Style pour les boutons modernes -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#1E88E5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1976D2"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#1565C0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour le bouton d'ajout -->
+        <Style x:Key="AddButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#43A047"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#388E3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour le bouton de fermeture -->
+        <Style x:Key="CloseButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#757575"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#616161"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#424242"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour les cartes de taille -->
+        <Style x:Key="SizeCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" BlurRadius="4" Color="#20000000" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style pour ComboBox -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="BorderBrush" Value="#BDBDBD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- En-tête -->
+            <RowDefinition Height="Auto"/>
+            <!-- Sélection de variante -->
+            <RowDefinition Height="*"/>
+            <!-- Liste des tailles -->
+            <RowDefinition Height="Auto"/>
+            <!-- Boutons d'action -->
+        </Grid.RowDefinitions>
+
+        <!-- En-tête -->
+        <Border Grid.Row="0" Background="White" Padding="25,20" BorderThickness="0,0,0,1" BorderBrush="#E0E0E0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock x:Name="txtProductName" 
+                               Text="Détails du produit" 
+                               FontSize="24" 
+                               FontWeight="Bold"
+                               Foreground="#212121"/>
+                    <TextBlock Text="Gérez les tailles et les stocks disponibles" 
+                               Margin="0,5,0,0"
+                               FontSize="14"
+                               Foreground="#757575"/>
+                </StackPanel>
+
+                <Button x:Name="btnClose" 
+                        Grid.Column="1" 
+                        Content="Fermer" 
+                        Style="{StaticResource CloseButton}"
+                        Padding="15,8"
+                        VerticalAlignment="Top"
+                        Click="BtnClose_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Sélection de variante avec photo -->
+        <Grid Grid.Row="1" Margin="25,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <!-- Image du produit -->
+                <ColumnDefinition Width="*"/>
+                <!-- Sélection de variante et infos -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Image du produit -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                <Image x:Name="imgProduct" 
+                       Stretch="Uniform"
+                       Margin="15"/>
+            </Border>
+
+            <!-- Sélection de variante -->
+            <Grid Grid.Column="1" Margin="20,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                           Text="Sélectionnez une variante" 
+                           FontSize="16" 
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,10"/>
+
+                <ComboBox x:Name="cmbVariants" 
+                          Grid.Row="1"
+                          Style="{StaticResource ModernComboBox}"
+                          SelectionChanged="CmbVariants_SelectionChanged"
+                          DisplayMemberPath="Color"/>
+
+                <Button x:Name="btnAddSize" 
+                        Grid.Row="2"
+                        Content="+ Ajouter une nouvelle taille" 
+                        Style="{StaticResource AddButton}"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Left"
+                        Click="BtnAddSize_Click"/>
+            </Grid>
+        </Grid>
+
+        <!-- Liste des tailles -->
+        <Border Grid.Row="2" Background="White" Margin="25,0,25,20" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
+                <ItemsControl x:Name="SizesStockList" ItemsSource="{Binding SizesStock}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource SizeCard}" Width="200" Height="150">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Taille -->
+                                    <TextBlock Grid.Row="0" 
+                                               Text="{Binding Size, StringFormat=Taille: {0}}" 
+                                               FontSize="18" 
+                                               FontWeight="Bold"/>
+
+                                    <!-- Stock avec indicateur de couleur -->
+                                    <Grid Grid.Row="1" Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="Stock: " 
+                                                   FontSize="14"
+                                                   VerticalAlignment="Center"/>
+
+                                        <Border Grid.Column="1" 
+                                                Background="{Binding Stock, Converter={StaticResource StockColorConverter}}" 
+                                                CornerRadius="4"
+                                                Margin="5,0,0,0"
+                                                Padding="10,3">
+                                            <TextBlock Text="{Binding Stock}" 
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Bouton de mise à jour -->
+                                    <Button Grid.Row="2" 
+                                            Content="Modifier le stock" 
+                                            Style="{StaticResource ModernButton}"
+                                            Margin="0,15,0,0"
+                                            Tag="{Binding}"
+                                            VerticalAlignment="Bottom"
+                                            Click="BtnUpdateStock_Click"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</Window>

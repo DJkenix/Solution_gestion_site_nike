@@ -1,0 +1,32 @@
+﻿<Window x:Class="PanelNikeStore.ChangeRoleDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Modifier le Rôle" Height="200" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Modifier le rôle d'utilisateur" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Utilisateur: " FontWeight="Bold"/>
+            <TextBlock x:Name="txtUserId"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Nouveau rôle: " VerticalAlignment="Center" FontWeight="Bold"/>
+            <ComboBox x:Name="cmbRole" Width="150" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnSave" Content="Enregistrer" Width="80" Click="BtnSave_Click" Margin="0,0,10,0"/>
+            <Button x:Name="btnCancel" Content="Annuler" Width="80" Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

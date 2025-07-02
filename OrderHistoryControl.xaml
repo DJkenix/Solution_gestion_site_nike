@@ -1,0 +1,367 @@
+﻿<UserControl x:Class="PanelNikeStore.OrderHistoryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PanelNikeStore"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1200">
+
+    <UserControl.Resources>
+        <!-- Style pour les titres de section -->
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,20,0,10"/>
+            <Setter Property="Foreground" Value="#212121"/>
+        </Style>
+
+        <!-- Style pour les cartes de commandes récentes -->
+        <Style x:Key="OrderCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="0,0,20,20"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#20000000" BlurRadius="10" ShadowDepth="1" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style pour badges de statut -->
+        <Style x:Key="StatusBadge" TargetType="Border">
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Style pour les boutons d'action -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="#f5f5f5"/>
+            <Setter Property="BorderBrush" Value="#e0e0e0"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#e9e9e9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Convertisseur pour les couleurs de statut -->
+        <local:OrderHistoryStatusColorConverter x:Key="StatusColorConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="#f8f9fa">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30">
+                <!-- En-tête -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Historique des Commandes" 
+                               FontSize="24" FontWeight="Bold" 
+                               Foreground="#212121"/>
+
+                    <!-- Filtres rapides -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <ComboBox x:Name="cmbStatusFilter" Width="150" Margin="0,0,10,0" SelectionChanged="CmbStatusFilter_SelectionChanged">
+                            <ComboBoxItem Content="Tous les statuts" IsSelected="True"/>
+                            <ComboBoxItem Content="En attente"/>
+                            <ComboBoxItem Content="En préparation"/>
+                            <ComboBoxItem Content="Envoyé"/>
+                            <ComboBoxItem Content="Livré"/>
+                        </ComboBox>
+                        <ComboBox x:Name="cmbDateFilter" Width="150" SelectionChanged="CmbDateFilter_SelectionChanged">
+                            <ComboBoxItem Content="7 derniers jours" IsSelected="True"/>
+                            <ComboBoxItem Content="30 derniers jours"/>
+                            <ComboBoxItem Content="3 derniers mois"/>
+                            <ComboBoxItem Content="Année en cours"/>
+                            <ComboBoxItem Content="Personnalisé..."/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Tableau de bord analytique -->
+                <Border Background="White" BorderBrush="#e0e0e0" BorderThickness="1" 
+                        CornerRadius="8" Padding="20" Margin="0,0,0,30">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Total des commandes -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Total des commandes" FontSize="14" Foreground="#757575"/>
+                            <TextBlock x:Name="txtTotalOrders" Text="125" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                            <TextBlock Text="+8% vs mois précédent" FontSize="12" Foreground="#4CAF50"/>
+                        </StackPanel>
+
+                        <!-- Commandes récentes -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Commandes récentes (7j)" FontSize="14" Foreground="#757575"/>
+                            <TextBlock x:Name="txtRecentOrders" Text="23" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                            <TextBlock Text="+12% vs sem. précédente" FontSize="12" Foreground="#4CAF50"/>
+                        </StackPanel>
+
+                        <!-- Revenu total -->
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Revenu total" FontSize="14" Foreground="#757575"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="txtTotalRevenue" Text="27,450" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                                <TextBlock Text=" €" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                            </StackPanel>
+                            <TextBlock Text="+5% vs mois précédent" FontSize="12" Foreground="#4CAF50"/>
+                        </StackPanel>
+
+                        <!-- Valeur moyenne -->
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="Valeur moyenne" FontSize="14" Foreground="#757575"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="txtAverageValue" Text="219" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                                <TextBlock Text=" €" FontSize="32" FontWeight="Bold" Foreground="#212121"/>
+                            </StackPanel>
+                            <TextBlock Text="-2% vs mois précédent" FontSize="12" Foreground="#F44336"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Commandes nécessitant attention -->
+                <TextBlock Text="Commandes nécessitant attention" Style="{StaticResource SectionTitle}"/>
+                <Border Background="White" BorderBrush="#e0e0e0" BorderThickness="1" 
+                        CornerRadius="8" Padding="20" Margin="0,0,0,30">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Message si aucune commande en alerte -->
+                        <TextBlock x:Name="txtNoAlerts" Grid.Row="1" Text="Aucune commande ne nécessite votre attention pour le moment." 
+                                   Margin="0,20" HorizontalAlignment="Center" FontStyle="Italic" Foreground="#757575"
+                                   Visibility="Collapsed"/>
+
+                        <!-- Liste des commandes en alerte -->
+                        <ListView x:Name="AlertOrdersList" Grid.Row="1" BorderThickness="0" Background="Transparent">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0,0,0,8"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#FFF8E1" BorderBrush="#FFE0B2" BorderThickness="1" 
+                                            CornerRadius="4" Padding="15,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Icône alerte -->
+                                            <TextBlock Grid.Column="0" Text="⚠️" FontSize="20" Margin="0,0,15,0" VerticalAlignment="Center"/>
+
+                                            <!-- Info commande -->
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding AlertTitle}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding AlertMessage}" Foreground="#757575" Margin="0,5,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Actions -->
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <Button Content="Voir" Style="{StaticResource ActionButton}" 
+                                                        Tag="{Binding OrderId}" Click="BtnViewAlertOrder_Click"/>
+                                                <Button Content="Résoudre" Style="{StaticResource ActionButton}" Background="#FB8C00" Foreground="White" BorderThickness="0"
+                                                        Tag="{Binding OrderId}" Click="BtnResolveAlert_Click"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+
+                <!-- Section Commandes récentes -->
+                <TextBlock Text="Commandes récentes (7 derniers jours)" Style="{StaticResource SectionTitle}"/>
+
+                <Grid x:Name="gridRecentOrders">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Cartes de commandes récentes (Première ligne) -->
+                    <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource OrderCard}">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="Commande #21" FontWeight="Bold" FontSize="16"/>
+                                <TextBlock Text="27/04/2025" HorizontalAlignment="Right" Foreground="#757575"/>
+                            </Grid>
+                            <TextBlock Text="Client: client" Margin="0,5,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="3 articles" FontWeight="SemiBold"/>
+                                <TextBlock Text="459,97 €" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Border Style="{StaticResource StatusBadge}" Background="#FFC107" Margin="0,0,0,15">
+                                <TextBlock Text="En préparation" Foreground="White" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="Détails" Style="{StaticResource ActionButton}" Tag="21" Click="BtnOrderDetails_Click"/>
+                                <Button Content="Changer statut" Style="{StaticResource ActionButton}" Tag="21" Click="BtnChangeStatus_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource OrderCard}">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="Commande #20" FontWeight="Bold" FontSize="16"/>
+                                <TextBlock Text="25/04/2025" HorizontalAlignment="Right" Foreground="#757575"/>
+                            </Grid>
+                            <TextBlock Text="Client: client" Margin="0,5,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="1 article" FontWeight="SemiBold"/>
+                                <TextBlock Text="9999,00 €" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Border Style="{StaticResource StatusBadge}" Background="#4CAF50" Margin="0,0,0,15">
+                                <TextBlock Text="Livré" Foreground="White" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="Détails" Style="{StaticResource ActionButton}" Tag="20" Click="BtnOrderDetails_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource OrderCard}">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="Commande #19" FontWeight="Bold" FontSize="16"/>
+                                <TextBlock Text="13/04/2025" HorizontalAlignment="Right" Foreground="#757575"/>
+                            </Grid>
+                            <TextBlock Text="Client: Joco" Margin="0,5,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="2 articles" FontWeight="SemiBold"/>
+                                <TextBlock Text="389,98 €" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                            </Grid>
+                            <Border Style="{StaticResource StatusBadge}" Background="#FFC107" Margin="0,0,0,15">
+                                <TextBlock Text="En préparation" Foreground="White" FontWeight="SemiBold"/>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Content="Détails" Style="{StaticResource ActionButton}" Tag="19" Click="BtnOrderDetails_Click"/>
+                                <Button Content="Changer statut" Style="{StaticResource ActionButton}" Tag="19" Click="BtnChangeStatus_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Message si aucune commande récente -->
+                    <TextBlock x:Name="txtNoRecentOrders" Grid.ColumnSpan="3" 
+                              Text="Aucune commande récente trouvée." 
+                              HorizontalAlignment="Center" Margin="0,20" 
+                              Foreground="#757575" FontStyle="Italic" 
+                              Visibility="Collapsed"/>
+                </Grid>
+
+                <!-- Section Toutes les commandes -->
+                <TextBlock Text="Toutes les commandes" Style="{StaticResource SectionTitle}"/>
+
+                <!-- Filtres pour toutes les commandes -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Recherche -->
+                    <Border Grid.Column="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" 
+                           CornerRadius="4" Padding="10,0" VerticalAlignment="Center">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="🔍" Margin="0,0,10,0" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBox Grid.Column="1" x:Name="txtSearchOrder" BorderThickness="0"  
+                                    Background="Transparent" VerticalAlignment="Center"
+                                    GotFocus="TxtSearchOrder_GotFocus" LostFocus="TxtSearchOrder_LostFocus"
+                                    TextChanged="TxtSearchOrder_TextChanged" KeyDown="TxtSearchOrder_KeyDown"
+                                    Text="Rechercher par n° commande ou client..."/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Filtres -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Rechercher" Margin="10,0,0,0" Padding="15,5" Click="BtnSearchOrder_Click"/>
+                        <Button Content="Exporter" Margin="10,0,0,0" Padding="15,5" Click="BtnExportOrders_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Tableau de toutes les commandes -->
+                <Border Background="White" BorderBrush="#e0e0e0" BorderThickness="1" CornerRadius="8" 
+                       Padding="0" ClipToBounds="True">
+                    <DataGrid x:Name="AllOrdersGrid" AutoGenerateColumns="False" 
+                             HeadersVisibility="Column" GridLinesVisibility="None"
+                             BorderThickness="0" CanUserAddRows="False" 
+                             CanUserDeleteRows="False" IsReadOnly="True"
+                             AlternatingRowBackground="#F5F5F5" 
+                             RowHeight="40" VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="N°" Binding="{Binding Id}" Width="60"/>
+                            <DataGridTextColumn Header="Date" Binding="{Binding OrderDate}" Width="100"/>
+                            <DataGridTextColumn Header="Client" Binding="{Binding ClientName}" Width="150"/>
+                            <DataGridTextColumn Header="Articles" Binding="{Binding ItemCount}" Width="80"/>
+                            <DataGridTextColumn Header="Montant" Binding="{Binding Amount}" Width="100"/>
+                            <DataGridTemplateColumn Header="Statut" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource StatusBadge}" 
+                                               Background="{Binding Status, Converter={StaticResource StatusColorConverter}}" 
+                                               Margin="5,0">
+                                            <TextBlock Text="{Binding Status}" Foreground="White" FontWeight="SemiBold" FontSize="12"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Actions" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="5,0">
+                                            <Button Content="Détails" Style="{StaticResource ActionButton}" 
+                                                   Tag="{Binding Id}" Click="BtnOrderDetails_Click"/>
+                                            <Button Content="Changer statut" Style="{StaticResource ActionButton}" 
+                                                   Tag="{Binding Id}" Click="BtnChangeStatus_Click" 
+                                                   Visibility="{Binding CanChangeStatus, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
